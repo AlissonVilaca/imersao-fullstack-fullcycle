@@ -7,11 +7,15 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+func init() {
+	govalidator.SetFieldsRequiredByDefault(true)
+}
+
 type Bank struct {
 	Base     `valid:"required"` // Como se herdasse tudo do Base
-	Code     string             `json:"code" valid:"notnull"` //Essas tags permite que esse model seja convertido em json
-	Name     string             `json:"name" valid:"notnull"`
-	Accounts []*Account         `valid:"-"`
+	Code     string             `json:"code" gorm:"type:varchar(20)" valid:"notnull"` //Essas tags permite que esse model seja convertido em json
+	Name     string             `json:"name" gorm:"type:varchar(255)" valid:"notnull"`
+	Accounts []*Account         `gorm:"ForeignKey:BankID" valid:"-"`
 }
 
 func (bank *Bank) isValid() error { // o primeiro parentende indica que esta atachando isso a classe Bank, logo isso passar a ser um meodo
